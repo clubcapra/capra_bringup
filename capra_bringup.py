@@ -6,6 +6,9 @@ import tornado.options
 import tornado.web
 import os.path
 
+from controllers.HomeController import HomeHandler
+from controllers.LaunchFilesController import LaunchFilesHandler
+
 from tornado.options import define, options
 define("port", default=8888, help="run on the given port", type=int)
 
@@ -13,28 +16,17 @@ define("port", default=8888, help="run on the given port", type=int)
 class Application(tornado.web.Application):
     def __init__(self):
         handlers = [
-            (r"/", HomeHandler)
+            (r"/", HomeHandler),
+            (r"/launchfiles", LaunchFilesHandler)
         ]
         settings = dict(
             title=u"Capra BringUp",
-            view_path=os.path.join(os.path.dirname(__file__), "views"),
-            js_path=os.path.join(os.path.dirname(__file__), "assets/js"),
-            css_path=os.path.join(os.path.dirname(__file__), "assets/css"),
-            img_path=os.path.join(os.path.dirname(__file__), "assets/img"),
+            static_path=os.path.join(os.path.dirname(__file__), "assets"),
+            template_path=os.path.join(os.path.dirname(__file__), "views"),
             xsrf_cookies=True,
             debug=True,
         )
         tornado.web.Application.__init__(self, handlers, **settings)
-
-
-class BaseHandler(tornado.web.RequestHandler):
-    def get(self):
-        return
-
-
-class HomeHandler(BaseHandler):
-    def get(self):
-        self.render("views/home.html")
 
 
 def main():

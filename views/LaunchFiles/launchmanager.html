@@ -1,0 +1,33 @@
+{% extends "../base.html" %}
+
+{% block head %}
+    <script type="text/javascript" src="{{ static_url("js/launchmanager.js") }}"></script>
+    <script type="text/javascript" src="{{ static_url("js/jquery.xml2json.js") }}"></script>
+{% end %}
+
+{% block content %}
+    <div class="col-md-4">
+        <select id="launchfile_select" size="5">
+        {% for file in files %}
+            <option>{{ escape(file) }}</option>
+        {% end %}
+        </select>
+
+        <div class="control-group">
+            <div id="launchfile_edit" class="btn btn-primary">Modifier</div>
+            <div id="launchfile_cancel" class="btn btn-primary">Annuler</div>
+        </div>
+    </div>
+    <div class="col-md-8">
+        <pre class="launchfile_code"></pre>
+        <form id="launchfile_form" method="post">
+            <div class="form-group">
+                <label>Launch file name:</label>
+                <input type="text" name="launchfile_name" class="form-control" />
+            </div>
+            <div id="launchfile_formdiv"></div>
+            {% raw xsrf_form_html() %}
+            <input type="submit" class="btn btn-primary"/>
+        </form>
+    </div>
+{% end %}

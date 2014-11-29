@@ -7,7 +7,7 @@ import tornado.web
 import os.path
 
 from controllers.HomeController import HomeHandler
-from controllers.LaunchFilesController import LaunchFilesHandler
+from controllers.LaunchFilesController import LaunchFilesHandler, GetLaunchFilesByNameHandler
 
 from tornado.options import define, options
 define("port", default=8888, help="run on the given port", type=int)
@@ -17,7 +17,8 @@ class Application(tornado.web.Application):
     def __init__(self):
         handlers = [
             (r"/", HomeHandler),
-            (r"/launchfiles", LaunchFilesHandler)
+            (r"/launchfiles", LaunchFilesHandler),
+            (r"/launchfiles/(.+\.launch)", GetLaunchFilesByNameHandler)
         ]
         settings = dict(
             title=u"Capra BringUp",

@@ -10,3 +10,44 @@ body{
     padding: 0;
     margin-bottom: 60px;
 }
+
+.container {
+    margin-top: 20px;
+    margin-bottom: 20px;
+}
+
+#header, #footer {
+    width:100%;
+    float:left;
+    background-color: #DFDFDF;
+}
+
+.launchfile_code div > div {
+    padding-left: 25px;
+}
+
+#launchfile_formdiv div > div {
+    padding-left: 25px;
+}
+
+#launchfile_formdiv select {
+    margin-top: 15px;
+    margin-bottom: 15px;
+}
+
+.launchfile_code {
+    line-height: 1em;
+}
+
+.launchfile_code .name {
+    color: blue;
+}
+
+.launchfile_code .attribute {
+    color: red;
+}
+
+.control-group {
+    margin-top: 10px;
+    margin-bottom: 10px;
+}

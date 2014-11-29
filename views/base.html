@@ -13,8 +13,13 @@
         {% block head %}{% end %}
     </head>
     <body>
-        <div id="header"></div>
+        <div id="header">
+            <p>Header</p>
+        </div>
+        <div class="clearfix"></div>
         <div id="content" class="container">{% block content %}{% end %}</div>
-        <div id="footer"></div>
+        <div id="footer">
+            <p>Footer</p>
+        </div>
     </body>
 </html>

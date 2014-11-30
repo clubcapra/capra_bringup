@@ -10,7 +10,13 @@
         <script type="text/javascript" src="{{ static_url("js/jquery.min.js") }}"></script>
         <script type="text/javascript" src="{{ static_url("libs/bootstrap/js/bootstrap.min.js") }}"></script>
 
-
+        {% block head %}{% end %}
+    </head>
+    <body>
+        <div id="header">
+            <p>Header</p>
+        </div>
+        
         <nav class="navbar navbar-default navbar-fixed-top" role="navigation" style="color:red">
             <div class="container-fluid">
                 <div class="navbar-header">
@@ -27,17 +33,13 @@
                 <div id="navbar" class="navbar-collapse collapse">
                     <ul class="nav navbar-nav navbar-right">
                         <li><a href="#">Dashboard</a></li>
+                        <li><a href="#">Launch File Manager</a></li>
+                        <li><a href="#">Topics</a></li>
                         <li><a href="#">Help</a></li>
                     </ul>
                 </div>
             </div>
         </nav>
-        {% block head %}{% end %}
-    </head>
-    <body>
-        <div id="header">
-            <p>Header</p>
-        </div>
         <div class="clearfix"></div>
         <div id="content" class="container">{% block content %}{% end %}</div>
         <div id="footer">

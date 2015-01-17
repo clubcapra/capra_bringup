@@ -18,6 +18,8 @@ class LaunchFilesHandler(BaseHandler):
         self.render("LaunchFiles/launchmanager.html", files=files)
 
     def post(self, *args, **kwargs):
+        # path = environ["IBEX_HOME"]+"/launch/"+self.request.arguments['launchfile_name']
+        self.request.arguments['launchfile_name']
         self.write(json_encode(self.request.arguments))
 
 class GetLaunchFilesByNameHandler(BaseHandler):

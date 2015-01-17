@@ -14,11 +14,16 @@ jQuery(function($) {
         launchfile_formDiv,
         launchfile_name;
 
+    var nodeCount,
+        includeCount,
+        paramCount,
+        argCount;
+
     $(document).ready(function () {
         init();
     });
 
-    function appendSelectElementName(element, enabled, selectValue)
+    function createSelectElementName(enabled, selectValue)
     {
         select =
             $('<select class="form-control" >' +
@@ -32,8 +37,8 @@ jQuery(function($) {
         if(enabled)
         {
             select.change(function(e){
-                element.after(createElementForm($(this).val(), enabled));
-                element.remove();
+                $(this).parent().after(createElementForm($(this).val(), enabled));
+                $(this).parent().remove();
             });
         }
         else
@@ -44,16 +49,28 @@ jQuery(function($) {
         if(!!selectValue)
             select.val(selectValue);
 
-        element.append(select);
+        return select;
     }
 
-    function appendArgAttributes(element, obj)
+    function createArgAttributes(obj, parent)
     {
         var innerDiv = $('<div>');
+        var arrayPosition = '[' + argCount.toString() + ']';
+        var inputName, inputDefault, inputValue;
 
-        inputName = $('<input type="text" name="arg[name]" class="form-control" />')
-        inputDefault = $('<input type="text" name="arg[default]" class="form-control" />')
-        inputValue = $('<input type="text" name="arg[value]" class="form-control" />')
+        if(!!parent)
+        {
+            inputName = $('<input type="text" name="' + parent + '[arg[name]]" class="form-control" />');
+            inputDefault = $('<input type="text" name="' + parent + '[arg[default]]" class="form-control" />');
+            inputValue = $('<input type="text" name="' + parent + '[arg[value]]" class="form-control" />');
+        }
+        else
+        {
+            inputName = $('<input type="text" name="arg' + arrayPosition + '[name]" class="form-control" />');
+            inputDefault = $('<input type="text" name="arg' + arrayPosition + '[default]" class="form-control" />');
+            inputValue = $('<input type="text" name="arg' + arrayPosition + '[value]" class="form-control" />');
+            argCount++;
+        }
 
         innerDiv.append($('<label>name:</label>')).append(inputName);
         innerDiv.append($('<br/><label>default:</label>')).append(inputDefault);
@@ -70,14 +87,15 @@ jQuery(function($) {
                 inputValue.val(obj.value);
         }
 
-        element.append(innerDiv);
+        return innerDiv;
     }
 
-    function appendIncludeAttributes(element, obj)
+    function createIncludeAttributes(obj)
     {
         var innerDiv = $('<div>');
+        var arrayPosition = '[' + includeCount.toString() + ']';
 
-        inputFile = $('<input type="text" name="include[file]" class="form-control" />');
+        inputFile = $('<input type="text" name="include' + arrayPosition + '[file]" class="form-control" />');
 
         innerDiv.append($('<label>file:</label>')).append(inputFile);
 
@@ -92,30 +110,38 @@ jQuery(function($) {
                 {
                     for(var i = 0; i < obj.arg.length; ++i)
                     {
-                        appendSelectElementName(innerDiv, false, 'arg');
-                        appendArgAttributes(innerDiv, obj.arg[i]);
+                        innerDiv.append(createSelectElementName(false, 'arg'));
+                        innerDiv.append(createArgAttributes(obj.arg[i], 'include' + arrayPosition));
                     }
                 }
                 else
                 {
-                    appendSelectElementName(innerDiv, false, 'arg');
-                    appendArgAttributes(innerDiv, obj.arg);
+                    innerDiv.append(createSelectElementName(false, 'arg'));
+                    innerDiv.append(createArgAttributes(obj.arg, 'include' + arrayPosition));
                 }
             }
         }
 
-        element.append(innerDiv);
+        var addButton = $('<a class="btn btn-primary">Ajouter arg</a>');
+        addButton.click(function(e){
+            $(this).before(createSelectElementName(false, 'arg'));
+            $(this).before(createArgAttributes(null, 'include' + arrayPosition));
+        })
+        innerDiv.append(addButton);
+        ++includeCount;
+        return innerDiv;
     }
 
-    function appendNodeAttributes(element, obj)
+    function createNodeAttributes(obj)
     {
         var innerDiv = $('<div>');
+        var arrayPosition = '[' + nodeCount.toString() + ']';
 
-        inputArgs = $('<input type="text" name="node[args]" class="form-control" />');
-        inputName = $('<input type="text" name="node[name]" class="form-control" />');
-        inputOutput = $('<input type="text" name="node[output]" class="form-control" />');
-        inputPkg = $('<input type="text" name="node[pkg]" class="form-control" />');
-        inputType = $('<input type="text" name="node[type]" class="form-control" />');
+        inputArgs = $('<input type="text" name="node' + arrayPosition + '[args]" class="form-control" />');
+        inputName = $('<input type="text" name="node' + arrayPosition + '[name]" class="form-control" />');
+        inputOutput = $('<input type="text" name="node' + arrayPosition + '[output]" class="form-control" />');
+        inputPkg = $('<input type="text" name="node' + arrayPosition + '[pkg]" class="form-control" />');
+        inputType = $('<input type="text" name="node' + arrayPosition + '[type]" class="form-control" />');
 
         innerDiv.append($('<label>args:</label>')).append(inputArgs);
         innerDiv.append($('<br/><label>name:</label>')).append(inputName);
@@ -146,27 +172,48 @@ jQuery(function($) {
                 {
                     for(var i = 0; i < obj.param.length; ++i)
                     {
-                        appendSelectElementName(innerDiv, false, 'param');
-                        appendParamAttributes(innerDiv, obj.param[i]);
+                        innerDiv.append(createSelectElementName(false, 'param'));
+                        innerDiv.append(createParamAttributes(obj.param[i], 'node' + arrayPosition));
                     }
                 }
                 else
                 {
-                    appendSelectElementName(innerDiv, false, 'param');
-                    appendParamAttributes(innerDiv, obj.param);
+                    innerDiv.append(createSelectElementName(false, 'param'));
+                    innerDiv.append(createParamAttributes(obj.param, 'node' + arrayPosition));
                 }
             }
         }
 
-        element.append(innerDiv);
+        var addButton = $('<a class="btn btn-primary">Ajouter param</a>');
+        addButton.click(function(e){
+            $(this).before(createSelectElementName(false, 'param'));
+            $(this).before(createParamAttributes(null, 'node' + arrayPosition));
+        })
+        innerDiv.append(addButton);
+
+        ++nodeCount;
+
+        return innerDiv;
     }
 
-    function appendParamAttributes(element, obj)
+    function createParamAttributes(obj, parent)
     {
         var innerDiv = $('<div>');
+        var arrayPosition = '[' + paramCount.toString() + ']';
+        var inputName, inputValue;
 
-        inputName = $('<input type="text" name="param[name]" class="form-control" />');
-        inputValue = $('<input type="text" name="param[value]" class="form-control" />');
+        if(!!parent)
+        {
+            inputName = $('<input type="text" name="' + parent + '[param[name]]" class="form-control" />');
+            inputValue = $('<input type="text" name="' + parent + '[param[value]]" class="form-control" />');
+        }
+        else
+        {
+            inputName = $('<input type="text" name="param' + arrayPosition + '[name]" class="form-control" />');
+            inputValue = $('<input type="text" name="param' + arrayPosition + '[value]" class="form-control" />');
+            ++paramCount;
+        }
+
 
         innerDiv.append($('<label>name:</label>')).append(inputName);
         innerDiv.append($('<br/><label>value:</label>')).append(inputValue);
@@ -179,7 +226,7 @@ jQuery(function($) {
                 inputValue.val(obj.value);
         }
 
-        element.append(innerDiv);
+        return innerDiv;
     }
 
     //type selectable, can we change the type of the current node which change attributes.
@@ -187,16 +234,16 @@ jQuery(function($) {
     function createElementForm(elementName, typeSelectable,  data)
     {
         div = $('<div class="form-group">')
-        appendSelectElementName(div, typeSelectable, elementName);
+        div.append(createSelectElementName(typeSelectable, elementName));
 
         if(elementName == 'node')
-            appendNodeAttributes(div, data);
+            div.append(createNodeAttributes(data));
         else if(elementName == 'include')
-            appendIncludeAttributes(div, data);
+            div.append(createIncludeAttributes(data));
         else if(elementName == 'arg')
-            appendArgAttributes(div, data);
+            div.append(createArgAttributes(data));
         else if(elementName == 'param')
-            appendParamAttributes(div, data);
+            div.append(createParamAttributes(data));
 
         return div;
     }
@@ -215,6 +262,7 @@ jQuery(function($) {
     function formatLaunchFileXMLtoHtmlForm(xml, form)
     {
         form.empty();
+        initCount();
         //convert xml to json
         json = $.xml2json(xml);
 
@@ -232,6 +280,12 @@ jQuery(function($) {
                 form.append(createElementForm(element, false,  json[element]));
             }
         }
+
+        var addButton = $('<a class="btn btn-primary">Ajouter element</a>');
+        addButton.click(function(e){
+            $(this).before(createElementForm('include', true));
+        });
+        form.append(addButton);
     }
 
     function getLaunchFile(launchFile)
@@ -278,6 +332,14 @@ jQuery(function($) {
         launchfile_form = $("#launchfile_form");
         launchfile_formDiv = $("#launchfile_formdiv");
         launchfile_name = $("input[name=launchfile_name]");
+    }
+
+    function initCount()
+    {
+        nodeCount = 0;
+        includeCount = 0;
+        paramCount = 0;
+        argCount = 0;
     }
 
     function initEventHandlers()

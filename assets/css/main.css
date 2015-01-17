@@ -1,25 +1,27 @@
-html{
-    margin: 0;
-    padding: 0;
-    position: relative;
-    min-height: 100%;
+html,
+body {
+	margin:0;
+	padding:0;
+	height:100%;
+}
+#wrapper {
+	min-height:100%;
+	position:relative;
 }
 
-body{
-    margin: 0;
-    padding: 0;
-    margin-bottom: 60px;
+#content {
+	padding:10px;
+    padding-top: 60px;     /* Height of the header element + padding */
+	padding-bottom:60px;   /* Height of the footer element + padding */
 }
-
-.container {
-    margin-top: 20px;
-    margin-bottom: 20px;
-}
-
-#header, #footer {
-    width:100%;
-    float:left;
-    background-color: #DFDFDF;
+#footer {
+	width:100%;
+	height:50px;
+	position:absolute;
+	bottom:0;
+	left:0;
+    border-style: solid;
+    border-width: 1px;
 }
 
 .launchfile_code div > div {
@@ -30,12 +32,20 @@ body{
     padding-left: 25px;
 }
 
-#launchfile_formdiv select {
+#launchfile_form a, select, input[type="submit"] {
     margin-top: 15px;
+}
+
+#launchfile_form select {
     margin-bottom: 15px;
 }
 
+#launchfile_form {
+    margin-top: 15px;
+}
+
 .launchfile_code {
+    margin-top: 15px;
     line-height: 1em;
 }
 
